@@ -1,0 +1,16 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Billboard Graphic",
+    "section": "",
+    "text": "Billboard Graphic\n\nlibrary(tidyverse)\n\n\ndata(\"billboard\", package = \"tidyr\")\n\nbillboard_long &lt;- billboard |&gt;\n  pivot_longer(\n    cols = starts_with(\"wk\"),\n    names_to = \"week\",\n    names_prefix = \"wk\",\n    names_transform = list(week = as.integer),\n    values_to = \"rank\",\n    values_drop_na = TRUE\n  )\n\ntop_songs &lt;- billboard_long |&gt;\n  count(track, artist, name = \"weeks\") |&gt;\n  slice_max(weeks, n = 6, with_ties = FALSE)\n\nbillboard_long |&gt;\n  semi_join(top_songs, by = c(\"track\", \"artist\")) |&gt;\n  mutate(song = str_c(track, \" - \", artist)) |&gt;\n  ggplot(aes(x = week, y = rank, group = song)) +\n  geom_line(color = \"#D1495B\", linewidth = 1.2) +\n  facet_wrap(\n    vars(song),\n    ncol = 2,\n    labeller = labeller(song = label_wrap_gen(width = 32))\n  ) +\n  scale_x_continuous(breaks = scales::breaks_pretty(n = 6)) +\n  scale_y_reverse(breaks = seq(1, 100, by = 20)) +\n  labs(\n    title = \"Songs that wouldn't leave the charts\",\n    subtitle = \"Each line follows one song; a smaller rank means a higher chart position.\",\n    x = \"Week on the chart\",\n    y = \"Chart rank (1 = highest)\",\n    caption = \"The six songs with the most weeks on the Billboard chart. Source: tidyr::billboard.\"\n  ) +\n  theme_minimal(base_size = 12) +\n  theme(\n    plot.background = element_rect(fill = \"#F4F7FB\", color = NA),\n    panel.background = element_rect(fill = \"white\", color = NA),\n    panel.grid.minor = element_blank(),\n    panel.grid.major.x = element_blank(),\n    panel.spacing = unit(1.2, \"lines\"),\n    strip.background = element_rect(fill = \"#243B53\", color = NA),\n    strip.text = element_text(color = \"white\", face = \"bold\", margin = margin(8, 8, 8, 8)),\n    plot.title = element_text(face = \"bold\", size = 20, color = \"#102A43\"),\n    plot.subtitle = element_text(color = \"#486581\", margin = margin(b = 14)),\n    plot.caption = element_text(color = \"#627D98\", margin = margin(t = 12)),\n    axis.title = element_text(face = \"bold\", color = \"#334E68\"),\n    axis.text = element_text(color = \"#486581\")\n  )"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
+  }
+]
